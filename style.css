@@ -1,0 +1,170 @@
+/*---------------------start reset styles----------------------*/
+*, *:hover, *:focus, *:active{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+    box-sizing: border-box;
+    outline: none;
+}
+ol, ul {
+    list-style: none;
+}
+/*---------------------end reset styles----------------------*/
+/*---------------------start general styles----------------------*/
+body{
+    height: 100vh;
+    color: #ffffff;
+    background: linear-gradient(rgb(47, 150, 163), rgb(48, 62, 143)) ;
+}
+.main{
+    max-width: 1280px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+.selectric-wrapper{
+    position: relative;
+}
+.selectric{
+    position: relative;
+    text-align: center;
+    font-size: 16px;
+    line-height: 30px;
+    color: #ffffff;
+    min-width: 50px;
+    padding: 2px 24px 2px 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: linear-gradient(90deg,
+    rgba(140,44,132,0.804359243697479) 0%,
+    rgba(0,212,255,0.7483368347338936) 100%);
+    border: 2px solid #8c2c84;
+}
+.selectric-button{
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    line-height: 39px;
+    text-align: right;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.selectric-button:after{
+    content: '';
+    border: 4px solid transparent;
+    border-top-color: #ffffff;
+    border-bottom: none;
+}
+.selectric-items-wrapper{
+    display: none;
+    position: absolute;
+    top: 43px;
+    left: 50%;
+    min-width: 75px;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    background: linear-gradient(90deg,
+    rgba(140,44,132,0.804359243697479) 0%,
+    rgba(0,212,255,0.7483368347338936) 100%);
+    border: 2px solid #8c2c84;
+}
+.selectric-items{
+    text-align: center;
+    padding: 7px 5px;
+}
+.selectric-items li{
+    padding-bottom: 7px;
+    cursor: pointer;
+}
+.selectric-items li:last-child{
+    padding-bottom: 0;
+}
+.float-left{
+     float: left;
+}
+.float-right{
+    float: right;
+}
+.clearfix:after {
+    content: ' ';
+    clear: both;
+    display: block;
+}
+/*---------------------end general styles----------------------*/
+.header{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 70px;
+    z-index: 3333;
+    background-color: #ffffff;
+}
+.header-content{
+    width: 100%;
+    height: 100%;
+    padding: 15px 0;
+    clear: both;
+    background: linear-gradient(90deg,
+    rgba(2,0,36,0.35) 0%,
+    rgba(9,9,121,0.1) 50%,
+    rgba(0,212,255,0.36) 100%);
+}
+.menu-wrapper {
+    /*padding-top: 8px;*/
+}
+.menu li{
+    display: inline-block;
+    padding: 8px 15px;
+    color: #8c2c84;
+    border: 2px solid transparent;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.menu li:hover, .menu li.active{
+    border-color:  #8c2c84;
+}
+.main-section{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 90px;
+}
+.location, .temperature{
+    height: 30vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.location{
+    flex-direction: column-reverse;
+}
+.temperature-sections{
+    display: flex;
+    flex-wrap: wrap;
+}
+.temperature-sections .temperature{
+    width: 19%;
+}
+.temperature{
+    flex-direction: column;
+}
+.degree-section{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.degree-section span{
+    margin: 10px;
+    font-size: 30px;
+}
+.degree-section h2{
+    font-size: 40px;
+}
