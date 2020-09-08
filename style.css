@@ -11,6 +11,9 @@
 ol, ul {
     list-style: none;
 }
+li:hover, li:focus{
+    text-decoration: none;
+}
 /*---------------------end reset styles----------------------*/
 /*---------------------start general styles----------------------*/
 body{
