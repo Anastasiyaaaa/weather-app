@@ -97,6 +97,10 @@ body{
     clear: both;
     display: block;
 }
+h1{
+    font-size: 28px;
+    margin-bottom: 50px;
+}
 /*---------------------end general styles----------------------*/
 .header{
     position: fixed;
@@ -134,40 +138,14 @@ body{
     border-color:  #8c2c84;
 }
 .main-section{
-    display:flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+    text-align: center;
     padding-top: 90px;
 }
-.location, .temperature{
-    height: 30vh;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+
+.weather *{
+    margin-bottom: 25px;
 }
-.location{
-    flex-direction: column-reverse;
-}
-.temperature-sections{
-    display: flex;
-    flex-wrap: wrap;
-}
-.temperature-sections .temperature{
-    width: 19%;
-}
-.temperature{
-    flex-direction: column;
-}
-.degree-section{
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-.degree-section span{
-    margin: 10px;
-    font-size: 30px;
-}
-.degree-section h2{
-    font-size: 40px;
-}
+.weather-block{
+    display: inline-block;
+    margin: 0 15px 20px;
+ }
