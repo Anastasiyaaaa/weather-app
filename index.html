@@ -15,10 +15,10 @@
         <div class="main clearfix">
             <nav class="menu-wrapper float-left">
                 <ul class="menu">
-                    <li data-day="today" onclick="checkDataDay()" class="active"><span>Today</span></li>
-                    <li data-day="tomorrow" onclick="checkDataDay()"><span>Tomorrow</span></li>
-                    <li data-day="threeDays" onclick="checkDataDay()" data-quantity="3"><span>3 days</span></li>
-                    <li data-day="week" onclick="checkDataDay()" data-quantity="7"><span>Week</span></li>
+                    <li data-day="today" onclick="checkDataDay(this)" class="active"><span>Today</span></li>
+                    <li data-day="tomorrow" onclick="checkDataDay(this)"><span>Tomorrow</span></li>
+                    <li data-day="threeDays" onclick="checkDataDay(this)" data-quantity="3"><span>3 days</span></li>
+                    <li data-day="week" onclick="checkDataDay(this)" data-quantity="7"><span>Week</span></li>
                 </ul>
             </nav>
             <div class="selectric-wrapper float-right">
@@ -36,6 +36,7 @@
         </div>
     </div>
 </header>
+<h1 id="h1"></h1>
 <main class="main main-section"  id="main">
     <div class="location">
         <h1 class="location-timezone">Timezone</h1>
