@@ -1,17 +1,18 @@
 /*---------------------start reset styles----------------------*/
-*, *:hover, *:focus, *:active{
+*{
     margin: 0;
     padding: 0;
     border: 0;
     font: inherit;
     vertical-align: baseline;
     box-sizing: border-box;
-    outline: none;
 }
 ol, ul {
     list-style: none;
 }
-li:hover, li:focus{
+li:hover, li:focus,
+*:hover, *:focus, *:active{
+    outline: none;
     text-decoration: none;
 }
 /*---------------------end reset styles----------------------*/

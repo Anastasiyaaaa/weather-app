@@ -15,21 +15,21 @@
         <div class="main clearfix">
             <nav class="menu-wrapper float-left">
                 <ul class="menu">
-                    <li onclick="checkDataDay('today')" class="active"><span>Today</span></li>
-                    <li onclick="checkDataDay('tomorrow')"><span>Tomorrow</span></li>
-                    <li onclick="checkDataDay('threeDays')"><span>3 days</span></li>
-                    <li onclick="checkDataDay('week')"><span>Week</span></li>
+                    <li onclick="checkDataDay(this, 'today')" class="active"><span>Today</span></li>
+                    <li onclick="checkDataDay(this, 'tomorrow')"><span>Tomorrow</span></li>
+                    <li onclick="checkDataDay(this, 'threeDays')"><span>3 days</span></li>
+                    <li onclick="checkDataDay(this, 'week')"><span>Week</span></li>
                 </ul>
             </nav>
             <div class="selectric-wrapper float-right">
                 <div class="selectric">
                     <span class="selectric-label">˚F, mph</span>
-                    <i class="selectric-button"></i>
+                    <i class="selectric-button" onclick="showDegreesVariants()"></i>
                 </div>
                 <div class="selectric-items-wrapper">
                     <ul class="selectric-items">
-                        <li data-index="0" class="selected">˚F, mph</li>
-                        <li data-index="1">˚C, m/s</li>
+                        <li onclick="chooseDegrees(this)" data-index="0" class="selected">˚F, mph</li>
+                        <li onclick="chooseDegrees(this)" data-index="1">˚C, m/s</li>
                     </ul>
                 </div>
             </div>
@@ -40,8 +40,8 @@
     <h1 class="timezone">Timezone</h1>
     <section class="weather">
         <div class="weather-block">
-            <canvas id="icon" width="128" height="128">Icon</canvas>
-            <div class="weather-degree">24 <span>˚F, mph</span></div>
+            <canvas id="icon" width="138" height="128">Icon</canvas>
+            <div ><span class="weather-degree_num">24 </span> <span class="weather-degree">˚F, mph</span></div>
             <div class="weather-description">Comfortable weather</div>
         </div>
     </section>
