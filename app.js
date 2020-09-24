@@ -62,12 +62,10 @@ function checkDataDay(nav, day){
             createBlockTemplate(day);
             break;
         case "threeDays":
-            console.log(day);
-            weatherSection.innerHTML  = '';
+            createBlockTemplate(day);
             break;
         case 'week':
-            console.log(day);
-            weatherSection.innerHTML  = '';
+            createBlockTemplate(day);
             break;
     }
 }
@@ -96,11 +94,51 @@ async function getWeatherAPI(long, lat, day){
         addContentToday(data);
     }else if (day === 'tomorrow') {
         addContentTomorrow(data)
+    }else if (day === 'threeDays'){
+        addContentSomeDays(data, 2)
+    }else if (day === 'week'){
+        addContentSomeDays(data, 7)
     }else{addContentToday(data);}
 
 }
 function join() {
     
+}
+function addContentSomeDays(data, day){
+    const weatherBlocks = data.daily.data.slice(0, day);
+    console.log(weatherBlocks);
+    weatherBlocks.map(el => {
+        let createWeatherBlock = document.createElement('div');
+        createWeatherBlock.className = "weather-block";
+        let canvas = document.createElement('canvas');
+        canvas.id = "icon";
+        canvas.setAttribute('width', '128');
+        canvas.setAttribute('height', '128');
+        let createWeatherDegreeWrapper = document.createElement('div');
+        let createSpanWeatherDegree = document.createElement('span');
+        createSpanWeatherDegree.className = "weather-degree";
+        let createSpanWeatherDegreeNum = document.createElement('span');
+        createSpanWeatherDegreeNum.className = "weather-degree_num";
+        createWeatherDegreeWrapper.append(createSpanWeatherDegreeNum, createSpanWeatherDegree);
+        let createWeatherDescription = document.createElement('div');
+        createWeatherDescription.className = "weather-description";
+        createWeatherBlock.append(canvas, createWeatherDegreeWrapper,createWeatherDescription );
+        const {temperatureMax, summary, icon} = el;
+        console.log(el);
+        let weatherDescriptionM = document.querySelector('.weather-description');
+        let spanWeatherDegreeNumM = document.querySelector('.weather-degree_num');
+        spanWeatherDegreeNumM.textContent = temperatureMax;
+        weatherDescriptionM.textContent = summary;
+        setIcons(icon, iconElem);
+
+
+    });
+    // const {temperature, summary, icon} = data.currently;
+    // spanWeatherDegreeNum.textContent = temperature;
+    // weatherDescription.textContent = summary;
+    // setIcons(icon, iconElem);
+    // console.log(spanWeatherDegreeNum, "555")
+    // createBlockTemplate()
 }
 function addContentToday(data){
     console.log(data, '2');
@@ -123,7 +161,7 @@ function createBlockTemplate(day) {
     console.log("ddd");
     if (weatherSection.hasChildNodes()) weatherSection.innerHTML  = '';
     weatherSection.append(createWeatherBlock);
-    setTimeout(() => getWeatherAPI(long, lat, day), 2000);
+    setTimeout(() => getWeatherAPI(long, lat, day), 500);
     // getWeatherAPI(long, lat);
     console.log("append");
 }
