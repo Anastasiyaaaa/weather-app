@@ -44,7 +44,8 @@ canvas.setAttribute('width', '128');
 canvas.setAttribute('height', '128');
 weatherDegreeSpan = document.querySelector('.weather-degree');
 selectricLabel = document.querySelector('.selectric-label');
-weatherDegreeSpan.textContent = selectricLabel.textContent;let createWeatherDegreeWrapper = document.createElement('div');
+weatherDegreeSpan.textContent = selectricLabel.textContent;
+let createWeatherDegreeWrapper = document.createElement('div');
 let createSpanWeatherDegree = document.createElement('span');
 createSpanWeatherDegree.className = "weather-degree";
 let createweatherDegreeNum = document.createElement('span');
@@ -60,12 +61,43 @@ function showDegreesVariants(){
     selectricItemsWrapper.style.display = 'block';
 }
 //ыбор градусов
-function chooseDegrees(e){
+function chooseDegrees(degree){
     selectricItemsWrapper.removeAttribute("style");
     // weatherDegreeSpan.textContent = e.textContent;
     console.log(selectricLabel);
-    selectricLabel.textContent = e.textContent;
+    selectricLabel.textContent = degree.textContent;
+    updateDegreeNum(degree);
 
+}
+function updateDegreeNum(degree) {
+    let weatherBlocks = document.querySelectorAll('.weather-block');
+    console.log(weatherBlocks);
+    weatherBlocks.forEach( block =>{
+        block.querySelector('.weather-degree').textContent = degree.textContent;
+        if (degree.textContent === '˚C, m/s') {
+            block.querySelector('.weather-degree_num').textContent = updateDegreeToCelsius(block.querySelector('.weather-degree_num').textContent);
+        } else if (degree.textContent === '˚F, mph') {
+            block.querySelector('.weather-degree_num').textContent = updateDegreeToFahrenheit(block.querySelector('.weather-degree_num').textContent);
+        }
+        // block.querySelector('.weather-degree_num').textContent = degree.textContent;
+    })
+}
+
+function updateDegreeToCelsius(temp){
+    console.log(temp);
+    let newDegree = (+temp - 32) * (5 / 9);
+    return Math.floor(newDegree);
+}
+function updateDegreeToFahrenheit(temp){
+    let newDegree = (+temp * (9 / 5) + 32);
+    return  Math.floor(newDegree);
+}
+
+
+
+//----------
+function onSelect(s) {
+    console.log(s)
 }
 //клик по меню
 function checkDataDay(nav, day){
@@ -126,9 +158,16 @@ function addContentSomeDays(data, day){
         const {temperatureMax, temperatureMin, summary, icon} = el;
         const temperature = (temperatureMax + temperatureMin) / 2;
         weatherDegreeNum.textContent = temperature.toFixed(2);
+        if (selectricLabel.textContent === '˚C, m/s'){
+            console.log(weatherDegreeNum);
+            let newf = updateDegreeNum(selectricLabel.textContent);
+            console.log(newf);
+        }
         weatherDescription.textContent = summary;
         setIcons(icon, iconElem);
     });
+
+    // updateDegreeNum(selectricLabel.textContent);
 }
 function addContentToday(data){
     const {temperature, summary, icon} = data.currently;
