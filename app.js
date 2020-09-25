@@ -95,6 +95,7 @@ function updateDegreeToFahrenheit(temp){
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
+    changeSelected ();
     weatherSection.innerHTML  = '';
     if (day === 'now' || day === 'tomorrow' ) {
         weatherSection.append(createWeatherBlock);
@@ -102,6 +103,9 @@ function checkDataDay(nav, day){
         getWeatherAPI(long, lat, day);
     }
     getWeatherAPI(long, lat, day);
+}
+function changeSelected (){
+    selectricLabel.textContent = '˚F, mph';
 }
 function changeActiveNav (nav){
     navElemS.map(el => el.classList.remove('active'));
