@@ -92,13 +92,6 @@ function updateDegreeToFahrenheit(temp){
     let newDegree = (+temp * (9 / 5) + 32);
     return  Math.floor(newDegree);
 }
-
-
-
-//----------
-function onSelect(s) {
-    console.log(s)
-}
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
