@@ -63,19 +63,20 @@ function showDegreesVariants(){
 function chooseDegrees(e){
     selectricItemsWrapper.removeAttribute("style");
     // weatherDegreeSpan.textContent = e.textContent;
-    selectricLabel = e.textContent;
+    console.log(selectricLabel);
+    selectricLabel.textContent = e.textContent;
 
 }
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
     weatherSection.innerHTML  = '';
-    if (day === 'today' || day === 'tomorrow' ) {
+    if (day === 'now' || day === 'tomorrow' ) {
         weatherSection.append(createWeatherBlock);
-        createBlockTemplate(day);
+        updateElem();
+        getWeatherAPI(long, lat, day);
     }
-    createBlockTemplate(day);
-
+    getWeatherAPI(long, lat, day);
 }
 function changeActiveNav (nav){
     navElemS.map(el => el.classList.remove('active'));
@@ -97,32 +98,18 @@ async function getWeatherAPI(long, lat, day){
     const response = await fetch(`${proxy}${url}`);
     const data = await response.json();
     console.log(data);
-    // if (day === 'today') {
-    //     updateElem();
-    //     addContentToday(data);
-    // }else if (day === 'tomorrow') {
-    //     updateElem();
-    //     addContentTomorrow(data)
-    // }else if (day === 'threeDays'){
-    //     addContentSomeDays(data, 3)
-    // }else if (day === 'week'){
-    //     addContentSomeDays(data, 7)
-    // }else{
-    //     updateElem();addContentToday(data);}
     switch (day) {
-        case 'today':
-            updateElem();
+        case 'now':
             addContentToday(data);
             break;
         case 'tomorrow':
-            updateElem();
             addContentTomorrow(data);
             break;
         case "threeDays":
-            addContentSomeDays(data, 3);
+            addContentSomeDays(data, 4);
             break;
         case 'week':
-            addContentSomeDays(data, 7);
+            addContentSomeDays(data, 8);
             break;
         default:
             updateElem();
@@ -133,64 +120,33 @@ async function getWeatherAPI(long, lat, day){
 }
 
 function addContentSomeDays(data, day){
-    const weatherBlocks = data.daily.data.slice(0, day);
-    if (weatherSection.hasChildNodes()) weatherSection.innerHTML  = '';
+    const weatherBlocks = data.daily.data.slice(1, day);
     weatherBlocks.forEach((el, index) => {
-
-        // createWeatherBlock.id = `weather-block${index}`;
-        // canvas.id = `icon${index}`;
         const {weatherDegreeNum, weatherDescription, iconElem} = updateElemForMoreDays(index);
-        console.log(weatherDegreeNum, weatherDescription, iconElem);
-        // weatherSection.insertAdjacentHTML('beforeend', createWeatherBlock.outerHTML );
         const {temperatureMax, temperatureMin, summary, icon} = el;
         const temperature = (temperatureMax + temperatureMin) / 2;
-
-        // let weatherDegreeNum = document.querySelector(`#weather-block${index} .weather-degree_num`);
-        // let weatherDescription = document.querySelector(`#weather-block${index} .weather-description`);
         weatherDegreeNum.textContent = temperature.toFixed(2);
         weatherDescription.textContent = summary;
-        // iconElem = document.getElementById(`icon${index}`);
-
         setIcons(icon, iconElem);
-
-        // weatherSection.insertAdjacentHTML('beforeend', '<div id="test">test</div>' )
-
     });
-    // const {temperature, summary, icon} = data.currently;
-    // weatherDegreeNum.textContent = temperature;
-    // weatherDescription.textContent = summary;
-    // setIcons(icon, iconElem);
-    // console.log(weatherDegreeNum, "555")
-
 }
 function addContentToday(data){
-    console.log(data, '2');
     const {temperature, summary, icon} = data.currently;
     weatherDegreeNum.textContent = temperature;
     weatherDescription.textContent = summary;
     setIcons(icon, iconElem);
-    console.log(weatherDegreeNum, "555")
-
 }
 function addContentTomorrow(data){
-    const icon = data.daily.data[0].icon;
-    weatherDegreeNum.textContent = data.daily.data[0].temperatureHigh;
-    weatherDescription.textContent = data.daily.data[0].summary;
+    const icon = data.daily.data[1].icon;
+    weatherDegreeNum.textContent = ((data.daily.data[1].temperatureMax + data.daily.data[1].temperatureMin) / 2).toFixed(2);
+    weatherDescription.textContent = data.daily.data[1].summary;
     setIcons( icon, iconElem);
-    console.log(weatherDegreeNum, "555")
 }
-function createBlockTemplate(day) {
-    // console.log("ddd");
-    // if (weatherSection.hasChildNodes()) weatherSection.innerHTML  = '';
-    // weatherSection.append(createWeatherBlock);
-    setTimeout(() => getWeatherAPI(long, lat, day), 500);
-    // getWeatherAPI(long, lat);console.log("append");
-}
+
 function setIcons(icon, iconID) {
     const skycons = new Skycons({"color": "pink"});
     const CurrentIcon = icon.replace(/-/g, "_").toUpperCase();
     skycons.play();
-    console.log(CurrentIcon);
     return skycons.set(iconID, Skycons[CurrentIcon]);
 }
 window.addEventListener('load', () => {

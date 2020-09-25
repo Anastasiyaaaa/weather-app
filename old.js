@@ -6,7 +6,7 @@ let main = document.querySelector('#main');
 
 function showContent(data) {
     switch (data.dataset.day) {
-        case 'today':
+        case 'now':
             main.innerHTML = todayTemplate;
             break;
         case 'tomorrow':
@@ -88,7 +88,7 @@ function navigation() {
                 if (dataActiveDay.dataset.day === 'tomorrow') {
                     var {summary, icon} = data.daily;
                     var temperature = data.daily.data[0].temperatureHigh
-                }else if (dataActiveDay.dataset.day === 'today'){
+                }else if (dataActiveDay.dataset.day === 'now'){
                     var {summary, icon, temperature} = data.currently;
                 }
                 //Set DOM Elements from the API
