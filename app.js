@@ -4,21 +4,35 @@ let lat;
 
 let navElemS = Array.from(document.querySelectorAll('.menu li'));
 //беру элеменьты из DOM
-let weatherSection, iconElem, weatherDegreeNum, spanWeatherDegreeNum, weatherDescription,
+let weatherSection, iconElem, weatherDegreeNum, weatherDegreeSpan, weatherDescription,
     selectric, selectricLabel, selectricItemsWrapper, selectricItems;
 //обновляю элеменьты из DOM
 function updateElem() {
+    canvas.id = "icon";
     weatherSection = document.querySelector('.weather');
     iconElem = document.getElementById('icon');
     weatherDegreeNum= document.querySelector('.weather-degree_num');
-    spanWeatherDegreeNum = document.querySelector('.weather-degree_num');
+    weatherDegreeSpan = document.querySelector('.weather-degree');
     weatherDescription = document.querySelector('.weather-description');
     // выбор температуры в чём показывать
     selectric = document.querySelector('.selectric-button');
     selectricLabel = document.querySelector('.selectric-label');
-// weatherDegreeSpan.textContent = selectricLabel.textContent;
+    weatherDegreeSpan.textContent = selectricLabel.textContent;
     selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
     selectricItems = document.querySelectorAll('.selectric-items li');
+}
+function updateElemForMoreDays(index){
+    let createWeatherBlockDays = createWeatherBlock;
+    createWeatherBlockDays.id = `weather-block${index}`;
+    let canvasDays = canvas;
+    canvasDays.id = `icon${index}`;
+    weatherSection.insertAdjacentHTML('beforeend', createWeatherBlockDays.outerHTML );
+    let weatherDegreeNum = document.querySelector(`#weather-block${index} .weather-degree_num`);
+    let weatherDescription = document.querySelector(`#weather-block${index} .weather-description`);
+    let iconElem = document.getElementById(`icon${index}`);
+    weatherDegreeSpan = document.querySelector('.weather-degree');
+    weatherDegreeSpan.textContent = selectricLabel.textContent;
+    return {weatherDegreeNum,  weatherDescription,  iconElem}
 }
 
 // создаю элементы
@@ -28,12 +42,14 @@ let canvas = document.createElement('canvas');
 canvas.id = "icon";
 canvas.setAttribute('width', '128');
 canvas.setAttribute('height', '128');
-let createWeatherDegreeWrapper = document.createElement('div');
+weatherDegreeSpan = document.querySelector('.weather-degree');
+selectricLabel = document.querySelector('.selectric-label');
+weatherDegreeSpan.textContent = selectricLabel.textContent;let createWeatherDegreeWrapper = document.createElement('div');
 let createSpanWeatherDegree = document.createElement('span');
 createSpanWeatherDegree.className = "weather-degree";
-let createSpanWeatherDegreeNum = document.createElement('span');
-createSpanWeatherDegreeNum.className = "weather-degree_num";
-createWeatherDegreeWrapper.append(createSpanWeatherDegreeNum, createSpanWeatherDegree);
+let createweatherDegreeNum = document.createElement('span');
+createweatherDegreeNum.className = "weather-degree_num";
+createWeatherDegreeWrapper.append(createweatherDegreeNum, createSpanWeatherDegree);
 let createWeatherDescription = document.createElement('div');
 createWeatherDescription.className = "weather-description";
 createWeatherBlock.append(canvas, createWeatherDegreeWrapper,createWeatherDescription );
@@ -53,21 +69,13 @@ function chooseDegrees(e){
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
-    console.log(day);
-    switch (day) {
-        case 'today':
-            createBlockTemplate(day);
-            break;
-        case 'tomorrow':
-            createBlockTemplate(day);
-            break;
-        case "threeDays":
-            createBlockTemplate(day);
-            break;
-        case 'week':
-            createBlockTemplate(day);
-            break;
+    weatherSection.innerHTML  = '';
+    if (day === 'today' || day === 'tomorrow' ) {
+        weatherSection.append(createWeatherBlock);
+        createBlockTemplate(day);
     }
+    createBlockTemplate(day);
+
 }
 function changeActiveNav (nav){
     navElemS.map(el => el.classList.remove('active'));
@@ -89,81 +97,94 @@ async function getWeatherAPI(long, lat, day){
     const response = await fetch(`${proxy}${url}`);
     const data = await response.json();
     console.log(data);
-    updateElem();
-    if (day === 'today') {
-        addContentToday(data);
-    }else if (day === 'tomorrow') {
-        addContentTomorrow(data)
-    }else if (day === 'threeDays'){
-        addContentSomeDays(data, 2)
-    }else if (day === 'week'){
-        addContentSomeDays(data, 7)
-    }else{addContentToday(data);}
+    // if (day === 'today') {
+    //     updateElem();
+    //     addContentToday(data);
+    // }else if (day === 'tomorrow') {
+    //     updateElem();
+    //     addContentTomorrow(data)
+    // }else if (day === 'threeDays'){
+    //     addContentSomeDays(data, 3)
+    // }else if (day === 'week'){
+    //     addContentSomeDays(data, 7)
+    // }else{
+    //     updateElem();addContentToday(data);}
+    switch (day) {
+        case 'today':
+            updateElem();
+            addContentToday(data);
+            break;
+        case 'tomorrow':
+            updateElem();
+            addContentTomorrow(data);
+            break;
+        case "threeDays":
+            addContentSomeDays(data, 3);
+            break;
+        case 'week':
+            addContentSomeDays(data, 7);
+            break;
+        default:
+            updateElem();
+            addContentToday(data);
+    }
+
 
 }
-function join() {
-    
-}
+
 function addContentSomeDays(data, day){
     const weatherBlocks = data.daily.data.slice(0, day);
-    console.log(weatherBlocks);
-    weatherBlocks.map(el => {
-        let createWeatherBlock = document.createElement('div');
-        createWeatherBlock.className = "weather-block";
-        let canvas = document.createElement('canvas');
-        canvas.id = "icon";
-        canvas.setAttribute('width', '128');
-        canvas.setAttribute('height', '128');
-        let createWeatherDegreeWrapper = document.createElement('div');
-        let createSpanWeatherDegree = document.createElement('span');
-        createSpanWeatherDegree.className = "weather-degree";
-        let createSpanWeatherDegreeNum = document.createElement('span');
-        createSpanWeatherDegreeNum.className = "weather-degree_num";
-        createWeatherDegreeWrapper.append(createSpanWeatherDegreeNum, createSpanWeatherDegree);
-        let createWeatherDescription = document.createElement('div');
-        createWeatherDescription.className = "weather-description";
-        createWeatherBlock.append(canvas, createWeatherDegreeWrapper,createWeatherDescription );
-        const {temperatureMax, summary, icon} = el;
-        console.log(el);
-        let weatherDescriptionM = document.querySelector('.weather-description');
-        let spanWeatherDegreeNumM = document.querySelector('.weather-degree_num');
-        spanWeatherDegreeNumM.textContent = temperatureMax;
-        weatherDescriptionM.textContent = summary;
+    if (weatherSection.hasChildNodes()) weatherSection.innerHTML  = '';
+    weatherBlocks.forEach((el, index) => {
+
+        // createWeatherBlock.id = `weather-block${index}`;
+        // canvas.id = `icon${index}`;
+        const {weatherDegreeNum, weatherDescription, iconElem} = updateElemForMoreDays(index);
+        console.log(weatherDegreeNum, weatherDescription, iconElem);
+        // weatherSection.insertAdjacentHTML('beforeend', createWeatherBlock.outerHTML );
+        const {temperatureMax, temperatureMin, summary, icon} = el;
+        const temperature = (temperatureMax + temperatureMin) / 2;
+
+        // let weatherDegreeNum = document.querySelector(`#weather-block${index} .weather-degree_num`);
+        // let weatherDescription = document.querySelector(`#weather-block${index} .weather-description`);
+        weatherDegreeNum.textContent = temperature.toFixed(2);
+        weatherDescription.textContent = summary;
+        // iconElem = document.getElementById(`icon${index}`);
+
         setIcons(icon, iconElem);
 
+        // weatherSection.insertAdjacentHTML('beforeend', '<div id="test">test</div>' )
 
     });
     // const {temperature, summary, icon} = data.currently;
-    // spanWeatherDegreeNum.textContent = temperature;
+    // weatherDegreeNum.textContent = temperature;
     // weatherDescription.textContent = summary;
     // setIcons(icon, iconElem);
-    // console.log(spanWeatherDegreeNum, "555")
-    // createBlockTemplate()
+    // console.log(weatherDegreeNum, "555")
+
 }
 function addContentToday(data){
     console.log(data, '2');
     const {temperature, summary, icon} = data.currently;
-    spanWeatherDegreeNum.textContent = temperature;
+    weatherDegreeNum.textContent = temperature;
     weatherDescription.textContent = summary;
     setIcons(icon, iconElem);
-    console.log(spanWeatherDegreeNum, "555")
-    // createBlockTemplate()
+    console.log(weatherDegreeNum, "555")
+
 }
 function addContentTomorrow(data){
     const icon = data.daily.data[0].icon;
-    spanWeatherDegreeNum.textContent = data.daily.data[0].temperatureHigh;
+    weatherDegreeNum.textContent = data.daily.data[0].temperatureHigh;
     weatherDescription.textContent = data.daily.data[0].summary;
     setIcons( icon, iconElem);
-    console.log(spanWeatherDegreeNum, "555")
-    // createBlockTemplate()
+    console.log(weatherDegreeNum, "555")
 }
 function createBlockTemplate(day) {
-    console.log("ddd");
-    if (weatherSection.hasChildNodes()) weatherSection.innerHTML  = '';
-    weatherSection.append(createWeatherBlock);
+    // console.log("ddd");
+    // if (weatherSection.hasChildNodes()) weatherSection.innerHTML  = '';
+    // weatherSection.append(createWeatherBlock);
     setTimeout(() => getWeatherAPI(long, lat, day), 500);
-    // getWeatherAPI(long, lat);
-    console.log("append");
+    // getWeatherAPI(long, lat);console.log("append");
 }
 function setIcons(icon, iconID) {
     const skycons = new Skycons({"color": "pink"});
