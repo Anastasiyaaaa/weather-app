@@ -669,7 +669,6 @@
 
       if(typeof el === "string")
         el = document.getElementById(el);
-
       for(i = this.list.length; i--; )
         if(this.list[i].element === el) {
           this.list[i].drawing = this._determineDrawingFunction(draw);
