@@ -1,6 +1,13 @@
 let long;
 let lat;
 let weatherArr = [];
+function WeatherObj(temperatureK, temperatureC, summary, icon, iconIndex){
+    this.temperatureK = {temperature: temperatureK, degree: '˚F, mph'};
+    this.temperatureC = {temperature: temperatureC, degree: '˚C, m/s'};
+    this.summery = summary;
+    this.icon = icon;
+    this.iconIndex = iconIndex;
+}
 let weatherSection = document.querySelector('.weather');
 let weatherBlock, canvas, degreeWrapper, weatherDegreeNum, weatherDegree,weatherSummary;
 
@@ -14,31 +21,26 @@ function getCoords(){
     navigator.geolocation.getCurrentPosition(position => {
         long = position.coords.longitude;
         lat = position.coords.latitude;
-        getWeatherAPI(long, lat);
+        getWeatherAPI(long, lat, (data) => createWeatherArr(data));
     })
 }
-async function getWeatherAPI(long, lat){
+async function getWeatherAPI(long, lat, callbackFunction){
     const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
     let url = `https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
     const response = await fetch(`${proxy}${url}`);
     const data = await response.json();
-    createWeatherArr(data);
+    callbackFunction(data);
 }
 function createWeatherArr(data){
     const {temperature, summary, icon} = data.currently;
     const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
-    weatherArr[0] = {
-        temperatureK: {temperature, degree: '˚F, mph',},
-        temperatureC: {temperature: tempDegreeC , degree: '˚C, m/s',},
-        summary, icon, iconIndex: 'icon0'};
+    weatherArr.push(new WeatherObj(temperature, tempDegreeC, summary, icon, 'icon0'));
     data.daily.data.slice(1).forEach((el, index) => {
         const {temperatureMax, temperatureMin, summary, icon} = el;
-        const tempDegreeK = Math.floor((temperatureMax + temperatureMin) / 2);
+        const temperature = Math.floor((temperatureMax + temperatureMin) / 2);
         const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
-        weatherArr.push({
-            temperatureK: {temperature: tempDegreeK , degree: '˚F, mph',},
-            temperatureC: {temperature: tempDegreeC , degree: '˚C, m/s',},
-            summary, icon, iconIndex: `icon${++index}`});
+        const weather = new WeatherObj(temperature, tempDegreeC, summary, icon, `icon${++index}`);
+        weatherArr.push(weather);
     });
     createWeatherBlock();
 }
@@ -57,7 +59,7 @@ function createWeatherBlock() {
     weatherSummary = document.createElement('div');
     weatherSummary.className = "weather-description";
     weatherBlock.append(canvas, degreeWrapper,weatherSummary );
-    setContent(0, 1);
+    setContent(0, 7);
 }
 function setContent(since, to) {
     console.log(weatherArr);
