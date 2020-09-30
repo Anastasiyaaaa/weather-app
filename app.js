@@ -35,6 +35,8 @@ function createWeatherArr(data){
         const {temperatureMax, temperatureMin, summary, icon} = el;
         const tempDegreeK = Math.floor((temperatureMax + temperatureMin) / 2);
         const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
+
+
         weatherArr.push({
             temperatureK: {temperature: tempDegreeK , degree: '˚F, mph',},
             temperatureC: {temperature: tempDegreeC , degree: '˚C, m/s',},
