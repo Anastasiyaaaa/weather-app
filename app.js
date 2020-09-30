@@ -1,18 +1,27 @@
 let long;
 let lat;
 let weatherArr = [];
-function WeatherObj(temperatureK, temperatureC, summary, icon, iconIndex){
-    this.temperatureK = {temperature: temperatureK, degree: '˚F, mph'};
-    this.temperatureC = {temperature: temperatureC, degree: '˚C, m/s'};
-    this.summery = summary;
+function WeatherObj(temperature, degree, summary, icon, iconIndex){
+    this.temperature = {temperature, degree};
+    // this.temperatureC = {temperature: temperatureC, degree: '˚C, m/s'};
+    this.summary = summary;
     this.icon = icon;
     this.iconIndex = iconIndex;
 }
 let weatherSection = document.querySelector('.weather');
-let weatherBlock, canvas, degreeWrapper, weatherDegreeNum, weatherDegree,weatherSummary;
+let canvas, degreeWrapper, weatherDegreeNum, weatherDegree,weatherSummary;
+let weatherTemplate1;
 
 window.addEventListener('load', () => {
+    // weatherTemplate1 = createWeatherBlock();
+
+
     checkGeolocation();
+
+
+
+
+    renderWeather
 });
 function checkGeolocation(){
     navigator.geolocation ? getCoords() : h1.textContent = 'unlock your location';
@@ -21,7 +30,8 @@ function getCoords(){
     navigator.geolocation.getCurrentPosition(position => {
         long = position.coords.longitude;
         lat = position.coords.latitude;
-        getWeatherAPI(long, lat, (data) => createWeatherArr(data));
+        getWeatherAPI(long, lat, (data) => handleWeatherArr(data));
+
     })
 }
 async function getWeatherAPI(long, lat, callbackFunction){
@@ -31,26 +41,53 @@ async function getWeatherAPI(long, lat, callbackFunction){
     const data = await response.json();
     callbackFunction(data);
 }
-function createWeatherArr(data){
+function handleWeatherArr(data){
     const {temperature, summary, icon} = data.currently;
-    const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
-    weatherArr.push(new WeatherObj(temperature, tempDegreeC, summary, icon, 'icon0'));
+    const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9));
+    if ("rrr") {
+        weatherArr.push(new WeatherObj(tempDegreeC, '˚C, m/s', summary, icon, 'icon0'));
+    } else {
+        weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, 'icon0'));
+    }
+
     data.daily.data.slice(1).forEach((el, index) => {
         const {temperatureMax, temperatureMin, summary, icon} = el;
         const temperature = Math.floor((temperatureMax + temperatureMin) / 2);
         const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
-        const weather = new WeatherObj(temperature, tempDegreeC, summary, icon, `icon${++index}`);
-        weatherArr.push(weather);
+        if ("rrr") {
+            weatherArr.push(new WeatherObj(tempDegreeC, '˚C, m/s', summary, icon, `icon${++index}`));
+        } else {
+            weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, `icon${++index}`));
+        }
     });
-    createWeatherBlock();
+    renderWeather(weatherArr);
 }
-function createWeatherBlock() {
-    weatherBlock = document.createElement('div');
-    weatherBlock.className = "weather-block";
-    canvas = document.createElement('canvas');
+// function createWeatherBlock() {
+//     const weatherTemplate = document.createElement('div');
+//     weatherTemplate.className = "weather-block";
+//     canvas = document.createElement('canvas');
+//     canvas.setAttribute('width', '128');
+//     canvas.setAttribute('height', '128');
+//     degreeWrapper = document.createElement('div');
+//     weatherDegreeNum = document.createElement('span');
+//     weatherDegreeNum.className = "weather-degree_num";
+//     weatherDegree = document.createElement('span');
+//     weatherDegree.className = "weather-degree";
+//     degreeWrapper.append(weatherDegreeNum, weatherDegree);
+//     weatherSummary = document.createElement('div');
+//     weatherSummary.className = "weather-description";
+//     weatherTemplate.append(canvas, degreeWrapper,weatherSummary );
+//     return weatherTemplate;
+// }
+function renderWeather(e){
+    console.log(e);
+    const weatherTemplate = document.createElement('div');
+    weatherTemplate.className = "weather-block";
+    const canvas = document.createElement('canvas');
     canvas.setAttribute('width', '128');
     canvas.setAttribute('height', '128');
-    degreeWrapper = document.createElement('div');
+    canvas.id = e;
+        degreeWrapper = document.createElement('div');
     weatherDegreeNum = document.createElement('span');
     weatherDegreeNum.className = "weather-degree_num";
     weatherDegree = document.createElement('span');
@@ -58,19 +95,20 @@ function createWeatherBlock() {
     degreeWrapper.append(weatherDegreeNum, weatherDegree);
     weatherSummary = document.createElement('div');
     weatherSummary.className = "weather-description";
-    weatherBlock.append(canvas, degreeWrapper,weatherSummary );
-    setContent(0, 7);
-}
-function setContent(since, to) {
-    console.log(weatherArr);
-    weatherArr.slice(since, to).forEach((e) => {
-        canvas.id = e.iconIndex;
-        weatherDegreeNum.textContent = e.temperatureK.temperature;
-        weatherDegree.textContent = e.temperatureK.degree;
-        weatherSummary.textContent = e.summary;
-        weatherSection.insertAdjacentHTML('beforeend', weatherBlock.outerHTML);
-        setIcons(e.icon, e.iconIndex);
-    });
+    weatherTemplate.append(canvas, degreeWrapper,weatherSummary );
+
+    weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
+    // setIcons(e.icon, e.iconIndex);
+
+    // console.log(weatherArr);
+    // weatherArr.slice(since, to).forEach((e) => {
+    //     canvas.id = e.iconIndex;
+    //     weatherDegreeNum.textContent = e.temperatureK.temperature;
+    //     weatherDegree.textContent = e.temperatureK.degree;
+    //     weatherSummary.textContent = e.summary;
+    //     weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
+    //     setIcons(e.icon, e.iconIndex);
+    // });
 }
 
 function setIcons(icon, iconIndex) {
@@ -78,4 +116,22 @@ function setIcons(icon, iconIndex) {
     const CurrentIcon = icon.replace(/-/g, "_").toUpperCase();
     skycons.play();
     return skycons.set(iconIndex, Skycons[CurrentIcon]);
+}
+
+// выбор температуры в чём показывать
+let selectric = document.querySelector('.selectric-button');
+let selectricLabel = document.querySelector('.selectric-label');
+
+let selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
+let selectricItemsData = document.querySelectorAll('.selectric-items li');
+//клик по выборы температуры
+function showDegreesVariants(){
+    selectricItemsWrapper.style.display = 'block';
+}
+//ыбор градусов
+function chooseDegrees(degree){
+    selectricItemsWrapper.removeAttribute("style");
+    // weatherDegreeSpan.textContent = e.textContent;
+    console.log(degree.dataset.index);
+    selectricLabel.textContent = degree.textContent;
 }
