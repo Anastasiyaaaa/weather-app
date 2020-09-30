@@ -10,54 +10,6 @@ function WeatherObj(temperature, degree, summary, icon, iconIndex){
     this.iconIndex = iconIndex;
 }
 
-//клик по выборы температуры
-function showDegreesVariants(){
-    const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
-    selectricItemsWrapper.style.display = 'block';
-}
-//выбор градусов
-function chooseDegrees(degree){
-    const selectricLabel = document.querySelector('.selectric-label');
-    const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
-    selectricItemsWrapper.removeAttribute("style");
-
-    selectricLabel.textContent = degree.textContent;
-    getWeatherAPI(long, lat);
-}
-//клик по меню
-function checkDataDay(nav, day){
-    changeActiveNav (nav);
-    switch (day) {
-        case 'now':
-            weatherSection.innerHTML = "";
-            renderWeather(weatherArr[0]);
-            break;
-        case 'tomorrow':
-            weatherSection.innerHTML = "";
-            renderWeather(weatherArr[1]);
-            break;
-        case "threeDays":
-            weatherSection.innerHTML = "";
-            for (let i = 1; i < 4; i++) {
-                renderWeather(weatherArr[i])
-            }
-            break;
-        case 'week':
-            weatherSection.innerHTML = "";
-            for (let i = 1; i < 8; i++) {
-                renderWeather(weatherArr[i])
-            }
-            break;
-        default:
-            weatherSection.innerHTML = "";
-            renderWeather(weatherArr[0]);
-    }
-}
-//подсветка меню
-function changeActiveNav (nav){
-    document.querySelector('.menu li.active').classList.remove('active');
-    nav.classList.add('active');
-}
 //начало работы
 window.addEventListener('load', () => {
     checkGeolocation();
@@ -137,3 +89,47 @@ function setIcons(icon, iconIndex) {
     return skycons.set(iconIndex, Skycons[CurrentIcon]);
 }
 
+//клик по выборы температуры
+function showDegreesVariants(){
+    const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
+    selectricItemsWrapper.style.display = 'block';
+}
+//выбор градусов
+function chooseDegrees(degree){
+    const selectricLabel = document.querySelector('.selectric-label');
+    const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
+    selectricItemsWrapper.removeAttribute("style");
+
+    selectricLabel.textContent = degree.textContent;
+    getWeatherAPI(long, lat);
+}
+//клик по меню
+function checkDataDay(nav, day){
+    changeActiveNav (nav);
+    switch (day) {
+        case 'tomorrow':
+            weatherSection.innerHTML = "";
+            renderWeather(weatherArr[1]);
+            break;
+        case "threeDays":
+            weatherSection.innerHTML = "";
+            for (let i = 1; i <= 3; i++) {
+                renderWeather(weatherArr[i])
+            }
+            break;
+        case 'week':
+            weatherSection.innerHTML = "";
+            for (let i = 1; i <= 7; i++) {
+                renderWeather(weatherArr[i])
+            }
+            break;
+        default:
+            weatherSection.innerHTML = "";
+            renderWeather(weatherArr[0]);
+    }
+}
+//подсветка меню
+function changeActiveNav (nav){
+    document.querySelector('.menu li.active').classList.remove('active');
+    nav.classList.add('active');
+}
