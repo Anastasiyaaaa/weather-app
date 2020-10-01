@@ -11,21 +11,32 @@ function WeatherObj(temperature, degree, summary, icon, iconIndex){
 }
 
 //начало работы
-window.addEventListener('load', () => {
-    checkGeolocation();
+window.addEventListener('load', async () =>  {
+    let coords;
+    if ( navigator.geolocation) {
+        coords = await getCoords();
+        return (coords)
+    } else {
+        h1.textContent = 'unlock your location';
+        return
+    }
+
 });
-//проверка включена ли геолокация
-function checkGeolocation(){
-    navigator.geolocation ? getCoords() : h1.textContent = 'unlock your location';
-}
+
 //получаем текущие координаты
-function getCoords(){
-    navigator.geolocation.getCurrentPosition(position => {
-        long = position.coords.longitude;
-        lat = position.coords.latitude;
-        getWeatherAPI(long, lat);
-    })
+function getPosition() {
+    // Simple wrapper
+    return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(res, rej);
+    });
 }
+async function getCoords() {
+    let position = await getPosition();  // wait for getPosition to complete
+    const coords = await {lat: position.coords.latitude, long: position.coords.longitude}
+    // console.log({lat: position.coords.latitude, long: position.coords.longitude})
+   return ({coords})
+}
+
 //отправляем запрос на данные
 async function getWeatherAPI(long, lat){
     const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
