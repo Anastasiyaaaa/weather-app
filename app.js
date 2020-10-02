@@ -85,7 +85,7 @@ function switchRender(day) {
 
 // html структура блока
 function renderWeather(e){
-    const degree = document.querySelector('.selectric-label').textContent;
+    const degree =  document.querySelector('.selectric').value;
     const weatherTemplate = document.createElement('div');
     weatherTemplate.className = "weather-block";
     const canvas = document.createElement('canvas');
@@ -108,7 +108,6 @@ function renderWeather(e){
         weatherDegreeNum.textContent = e.temperature.temperatureC;
     }
     weatherDegree.textContent = degree;
-
     weatherSummary.textContent = e.summary;
     weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
     setIcons(e.icon, e.iconIndex);
@@ -122,22 +121,11 @@ function setIcons(icon, iconIndex) {
     return skycons.set(iconIndex, Skycons[CurrentIcon]);
 }
 
-
-//todo use select value
-//клик по выборы температуры
-function showDegreesVariants(){
-    const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
-    selectricItemsWrapper.style.display = 'block';
-}
-//выбор градусов
-async function chooseDegrees(degree){
-    const selectricLabel = document.querySelector('.selectric-label');
-    const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
-    selectricItemsWrapper.removeAttribute("style");
-    selectricLabel.textContent = degree.textContent;
+document.querySelector('.selectric').addEventListener('change', () => {
     checkDataDay(document.querySelector('.menu li.active'),
         document.querySelector('.menu li.active').dataset.day);
-}
+});
+
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
