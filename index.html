@@ -9,6 +9,7 @@
     <title>Weather</title>
 </head>
 <body>
+
 <header class="header">
     <div class="header-content">
         <div class="main clearfix">
@@ -21,16 +22,10 @@
                 </ul>
             </nav>
             <div class="selectric-wrapper float-right">
-                <div class="selectric">
-                    <span class="selectric-label">˚F, mph</span>
-                    <i class="selectric-button" onclick="showDegreesVariants()"></i>
-                </div>
-                <div class="selectric-items-wrapper">
-                    <ul class="selectric-items">
-                        <li onclick="chooseDegrees(this)" data-index="0" class="selected">˚F, mph</li>
-                        <li onclick="chooseDegrees(this)" data-index="1">˚C, m/s</li>
-                    </ul>
-                </div>
+                <select id="select" class="selectric" >
+                    <option value="˚F, mph" selected>˚F, mph</option>
+                    <option value="˚C, m/s">˚C, m/s</option>
+                </select>
             </div>
         </div>
     </div>
