@@ -10,13 +10,8 @@
 </head>
 <body>
 <!--todo-->
-<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-<script type="application/x-handlebars" id="renderSection" >
-   // compile the template
-  var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
-  // execute the compiled template and print the output to the console
-  console.log(template({ doesWhat: "rocks!" }));
-</script>
+
+
 <header class="header">
     <div class="header-content">
         <div class="main clearfix">
@@ -45,10 +40,38 @@
 </header>
 <main id="main" class="main main-section">
     <h1 class="timezone">Timezone</h1>
-    <section class="weather">
+    <section class="weather" id="weather">
+        <script id="template" type="text/x-handlebars-template">
+            <div class="weather-block">
+                <canvas width="128" height="128" id="{{iconIndex}}"></canvas>
+                <div>
+                    <span class="weather-degree_num">{{temperature.temperature}}</span>
+                    <span class="weather-degree">{{temperature.degree}}</span>
+                </div>
+                <div class="weather-description">{{summary}}</div>
+            </div>
+        </script>
     </section>
 </main>
+<div id="entry-template"></div>
+<div class="updates" id="updates">
 
+</div>
+<script src="./handlebars-v4.7.6.js"></script>
+<script>
+
+</script>
+
+
+
+<script type="application/x-handlebars" id="" >
+
+   <div class="entry">
+    <h1>{{name}}</h1>
+    <div class="body">
+    </div>
+  </div>
+</script>
 <script src="./app.js"></script>
 <script src="./skycons.js"></script>
 </body>

@@ -65,29 +65,40 @@
 
 // html структура блока
     function renderWeather(e) {
-        const weatherTemplate = document.createElement('div');
-        weatherTemplate.className = "weather-block";
-        const canvas = document.createElement('canvas');
-        canvas.setAttribute('width', '128');
-        canvas.setAttribute('height', '128');
-        canvas.id = e;
-        const degreeWrapper = document.createElement('div');
-        const weatherDegreeNum = document.createElement('span');
-        weatherDegreeNum.className = "weather-degree_num";
-        const weatherDegree = document.createElement('span');
-        weatherDegree.className = "weather-degree";
-        degreeWrapper.append(weatherDegreeNum, weatherDegree);
-        const weatherSummary = document.createElement('div');
-        weatherSummary.className = "weather-description";
-        weatherTemplate.append(canvas, degreeWrapper, weatherSummary);
-        canvas.id = e.iconIndex;
-        weatherDegreeNum.textContent = e.temperature.temperature;
-        weatherDegree.textContent = e.temperature.degree;
-        weatherSummary.textContent = e.summary;
-        weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
+        // const weatherTemplate = document.createElement('div');
+        // weatherTemplate.className = "weather-block";
+        // const canvas = document.createElement('canvas');
+        // canvas.setAttribute('width', '128');
+        // canvas.setAttribute('height', '128');
+        // // canvas.id = e;
+        // const degreeWrapper = document.createElement('div');
+        // const weatherDegreeNum = document.createElement('span');
+        // weatherDegreeNum.className = "weather-degree_num";
+        // const weatherDegree = document.createElement('span');
+        // weatherDegree.className = "weather-degree";
+        // degreeWrapper.append(weatherDegreeNum, weatherDegree);
+        // const weatherSummary = document.createElement('div');
+        // weatherSummary.className = "weather-description";
+        // weatherTemplate.append(canvas, degreeWrapper, weatherSummary);
+        // // canvas.id = e.iconIndex;
+        // weatherDegreeNum.textContent = e.temperature.temperature;
+        // weatherDegree.textContent = e.temperature.degree;
+        // weatherSummary.textContent = e.summary;
+        // weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
+
+        let source = document.getElementById("template").innerHTML;
+        let template = Handlebars.compile(source);
+        let updates = document.getElementById("weather");
+        updates.innerHTML =  template(e);
         setIcons(e.icon, e.iconIndex);
     }
-
+    // let data = {
+    //     name : 'John Doe'
+    // };
+    // let source = document.getElementById("template").innerHTML;
+    // let template = Handlebars.compile(source);
+    // let updates = document.getElementById("updates");
+    // updates.innerHTML =  template(data);
 //выводим иконку через skycons
     function setIcons(icon, iconIndex) {
         const skycons = new Skycons({"color": "pink"});
@@ -117,23 +128,23 @@
         changeActiveNav(nav);
         switch (day) {
             case 'tomorrow':
-                weatherSection.innerHTML = "";
+                // weatherSection.innerHTML = "";
                 renderWeather(weatherArr[1]);
                 break;
             case "threeDays":
-                weatherSection.innerHTML = "";
+                // weatherSection.innerHTML = "";
                 for (let i = 1; i <= 3; i++) {
                     renderWeather(weatherArr[i])
                 }
                 break;
             case 'week':
-                weatherSection.innerHTML = "";
+                // weatherSection.innerHTML = "";
                 for (let i = 1; i <= 7; i++) {
                     renderWeather(weatherArr[i])
                 }
                 break;
             default:
-                weatherSection.innerHTML = "";
+                // weatherSection.innerHTML = "";
                 renderWeather(weatherArr[0]);
         }
     }
