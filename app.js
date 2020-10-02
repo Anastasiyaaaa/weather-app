@@ -1,8 +1,7 @@
-let long;
-let lat;
-let weatherArr;
+
+// let weatherArr;
 let weatherSection = document.querySelector('.weather');
-let coords = {};
+// let coords = {};
 
 function WeatherObj(temperature, degree, summary, icon, iconIndex){
     this.temperature = {temperature, degree};
@@ -14,15 +13,61 @@ function WeatherObj(temperature, degree, summary, icon, iconIndex){
 //начало работы
 window.addEventListener('load', async () =>  {
     if ( navigator.geolocation) {
-        coords = await getCoords();
+        completeFunctions()
     } else {
         h1.textContent = 'unlock your location';
     }
+});
+async function completeFunctions(day) {
+    const coords = await getCoords();
     const weatherAPI = await getWeatherAPI(coords.long, coords.lat);
     const weatherArr =  handleWeatherArr(weatherAPI);
-    const day = checkDataDay(document.querySelector('.menu li.active'),
-        document.querySelector('.menu li.active').dataset.day);
-    console.log(day);
+    switchRender(day, weatherArr);
+}
+
+//получаем текущие координаты
+function getPosition() {
+    return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(res, rej);
+    });
+}
+async function getCoords() {
+    let position = await getPosition();  // wait for getPosition to complete
+    const coords = await {lat: position.coords.latitude, long: position.coords.longitude};
+    // console.log({lat: position.coords.latitude, long: position.coords.longitude})
+   return (coords)
+}
+//отправляем запрос на данные
+async function getWeatherAPI(long, lat){
+    const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
+    let url = `https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
+    const response = await fetch(`${proxy}${url}`);
+    return await response.json();
+}
+//обрабатываем данные под себя
+function handleWeatherArr(data){
+    const weatherArr = [];
+    const {temperature, summary, icon} = data.currently;
+    const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9));
+    const selectricLabel = document.querySelector('.selectric-label');
+    if (selectricLabel.textContent === "˚C, m/s") {
+        weatherArr.push(new WeatherObj(tempDegreeC, "˚C, m/s", summary, icon, 'icon01'));
+    } else if(selectricLabel.textContent === '˚F, mph') {
+        weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, 'icon02'));
+    }
+    data.daily.data.slice(1).forEach((el, index) => {
+        const {temperatureMax, temperatureMin, summary, icon} = el;
+        const temperature = Math.floor((temperatureMax + temperatureMin) / 2);
+        const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
+        if (selectricLabel.textContent === "˚C, m/s") {
+            weatherArr.push(new WeatherObj(tempDegreeC, '˚C, m/s', summary, icon, `icon${++index}`));
+        } else if(selectricLabel.textContent === '˚F, mph') {
+            weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, `icon${++index}`));
+        }
+    });
+    return weatherArr;
+}
+function switchRender(day,weatherArr ) {
     switch (day) {
         case 'tomorrow':
             weatherSection.innerHTML = "";
@@ -44,53 +89,8 @@ window.addEventListener('load', async () =>  {
             weatherSection.innerHTML = "";
             renderWeather(weatherArr[0]);
     }
+}
 
-});
-
-//получаем текущие координаты
-function getPosition() {
-    // Simple wrapper
-    return new Promise((res, rej) => {
-        navigator.geolocation.getCurrentPosition(res, rej);
-    });
-}
-async function getCoords() {
-    let position = await getPosition();  // wait for getPosition to complete
-    const coords = await {lat: position.coords.latitude, long: position.coords.longitude};
-    // console.log({lat: position.coords.latitude, long: position.coords.longitude})
-   return (coords)
-}
-//отправляем запрос на данные
-async function getWeatherAPI(long, lat){
-    const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
-    let url = `https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
-    const response = await fetch(`${proxy}${url}`);
-    return await response.json();
-}
-//обрабатываем данные под себя
-function handleWeatherArr(data){
-    weatherArr = [];
-    const {temperature, summary, icon} = data.currently;
-    const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9));
-    const selectricLabel = document.querySelector('.selectric-label');
-    if (selectricLabel.textContent === "˚C, m/s") {
-        weatherArr.push(new WeatherObj(tempDegreeC, "˚C, m/s", summary, icon, 'icon01'));
-    } else if(selectricLabel.textContent === '˚F, mph') {
-        weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, 'icon02'));
-    }
-    data.daily.data.slice(1).forEach((el, index) => {
-        const {temperatureMax, temperatureMin, summary, icon} = el;
-        const temperature = Math.floor((temperatureMax + temperatureMin) / 2);
-        const tempDegreeC = Math.floor( (+temperature - 32) * (5 / 9) );
-        if (selectricLabel.textContent === "˚C, m/s") {
-            weatherArr.push(new WeatherObj(tempDegreeC, '˚C, m/s', summary, icon, `icon${++index}`));
-        } else if(selectricLabel.textContent === '˚F, mph') {
-            weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, `icon${++index}`));
-        }
-    });
-    return weatherArr;
-    // checkDataDay(document.querySelector('.menu li.active'), document.querySelector('.menu li.active').dataset.day);
-}
 // html структура блока
 function renderWeather(e){
     const weatherTemplate = document.createElement('div');
@@ -115,6 +115,7 @@ function renderWeather(e){
     weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
     setIcons(e.icon, e.iconIndex);
 }
+
 //выводим иконку через skycons
 function setIcons(icon, iconIndex) {
     const skycons = new Skycons({"color": "pink"});
@@ -134,16 +135,13 @@ async function chooseDegrees(degree){
     const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
     selectricItemsWrapper.removeAttribute("style");
     selectricLabel.textContent = degree.textContent;
-    const weatherAPI = await getWeatherAPI(coords.long, coords.lat);
-    const weatherArr =  await handleWeatherArr(weatherAPI);
     checkDataDay(document.querySelector('.menu li.active'),
         document.querySelector('.menu li.active').dataset.day);
 }
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
-    return day;
-
+    completeFunctions(day);
 }
 //подсветка меню
 function changeActiveNav (nav){
