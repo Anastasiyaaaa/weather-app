@@ -2,6 +2,7 @@ let long;
 let lat;
 let weatherArr;
 let weatherSection = document.querySelector('.weather');
+let coords = {};
 
 function WeatherObj(temperature, degree, summary, icon, iconIndex){
     this.temperature = {temperature, degree};
@@ -12,15 +13,38 @@ function WeatherObj(temperature, degree, summary, icon, iconIndex){
 
 //начало работы
 window.addEventListener('load', async () =>  {
-    let coords;
     if ( navigator.geolocation) {
         coords = await getCoords();
     } else {
         h1.textContent = 'unlock your location';
     }
-    getWeatherAPI(coords.long, coords.lat);
+    const weatherAPI = await getWeatherAPI(coords.long, coords.lat);
+    const weatherArr =  handleWeatherArr(weatherAPI);
+    const day = checkDataDay(document.querySelector('.menu li.active'),
+        document.querySelector('.menu li.active').dataset.day);
+    console.log(day);
+    switch (day) {
+        case 'tomorrow':
+            weatherSection.innerHTML = "";
+            renderWeather(weatherArr[1]);
+            break;
+        case "threeDays":
+            weatherSection.innerHTML = "";
+            for (let i = 1; i <= 3; i++) {
+                renderWeather(weatherArr[i])
+            }
+            break;
+        case 'week':
+            weatherSection.innerHTML = "";
+            for (let i = 1; i <= 7; i++) {
+                renderWeather(weatherArr[i])
+            }
+            break;
+        default:
+            weatherSection.innerHTML = "";
+            renderWeather(weatherArr[0]);
+    }
 
-    console.log(coords);
 });
 
 //получаем текущие координаты
@@ -32,18 +56,16 @@ function getPosition() {
 }
 async function getCoords() {
     let position = await getPosition();  // wait for getPosition to complete
-    const coords = await {lat: position.coords.latitude, long: position.coords.longitude}
+    const coords = await {lat: position.coords.latitude, long: position.coords.longitude};
     // console.log({lat: position.coords.latitude, long: position.coords.longitude})
-   return ({coords})
+   return (coords)
 }
-
 //отправляем запрос на данные
 async function getWeatherAPI(long, lat){
     const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
     let url = `https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
     const response = await fetch(`${proxy}${url}`);
-    const data = await response.json();
-    handleWeatherArr(data);
+    return await response.json();
 }
 //обрабатываем данные под себя
 function handleWeatherArr(data){
@@ -66,7 +88,8 @@ function handleWeatherArr(data){
             weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, `icon${++index}`));
         }
     });
-    checkDataDay(document.querySelector('.menu li.active'), document.querySelector('.menu li.active').dataset.day);
+    return weatherArr;
+    // checkDataDay(document.querySelector('.menu li.active'), document.querySelector('.menu li.active').dataset.day);
 }
 // html структура блока
 function renderWeather(e){
@@ -106,38 +129,21 @@ function showDegreesVariants(){
     selectricItemsWrapper.style.display = 'block';
 }
 //выбор градусов
-function chooseDegrees(degree){
+async function chooseDegrees(degree){
     const selectricLabel = document.querySelector('.selectric-label');
     const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
     selectricItemsWrapper.removeAttribute("style");
-
     selectricLabel.textContent = degree.textContent;
-    getWeatherAPI(long, lat);
+    const weatherAPI = await getWeatherAPI(coords.long, coords.lat);
+    const weatherArr =  await handleWeatherArr(weatherAPI);
+    checkDataDay(document.querySelector('.menu li.active'),
+        document.querySelector('.menu li.active').dataset.day);
 }
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
-    switch (day) {
-        case 'tomorrow':
-            weatherSection.innerHTML = "";
-            renderWeather(weatherArr[1]);
-            break;
-        case "threeDays":
-            weatherSection.innerHTML = "";
-            for (let i = 1; i <= 3; i++) {
-                renderWeather(weatherArr[i])
-            }
-            break;
-        case 'week':
-            weatherSection.innerHTML = "";
-            for (let i = 1; i <= 7; i++) {
-                renderWeather(weatherArr[i])
-            }
-            break;
-        default:
-            weatherSection.innerHTML = "";
-            renderWeather(weatherArr[0]);
-    }
+    return day;
+
 }
 //подсветка меню
 function changeActiveNav (nav){
