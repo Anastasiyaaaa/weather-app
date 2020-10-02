@@ -10,32 +10,48 @@
 </head>
 <body>
 
+
+
 <header class="header">
     <div class="header-content">
         <div class="main clearfix">
             <nav class="menu-wrapper float-left">
                 <ul class="menu">
-                    <li onclick="checkDataDay(this, 'now')"  data-day="now" class="active"><span>Now</span></li>
-                    <li onclick="checkDataDay(this, 'tomorrow')" data-day="tomorrow"><span>Tomorrow</span></li>
-                    <li onclick="checkDataDay(this, 'threeDays')" data-day="threeDays"><span>3 days</span></li>
-                    <li onclick="checkDataDay(this, 'week')" data-day="week"><span>Week</span></li>
+                    <li data-day="now" class="active"><span>Now</span></li>
+                    <li data-day="tomorrow"><span>Tomorrow</span></li>
+                    <li data-day="threeDays"><span>3 days</span></li>
+                    <li data-day="week"><span>Week</span></li>
                 </ul>
             </nav>
             <div class="selectric-wrapper float-right">
-                <select id="select" class="selectric" >
-                    <option value="˚F, mph" selected>˚F, mph</option>
-                    <option value="˚C, m/s">˚C, m/s</option>
-                </select>
+                <div class="selectric-wrapper float-right">
+                    <select id="select" class="selectric" >
+                        <option value="˚F, mph" selected>˚F, mph</option>
+                        <option value="˚C, m/s">˚C, m/s</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 </header>
-
 <main id="main" class="main main-section">
     <h1 class="timezone">Timezone</h1>
-    <section class="weather">
+    <section class="weather" id="weather">
+
     </section>
 </main>
+<script src="./handlebars-v4.7.6.js"></script>
+<!--todo градусы и температуру для темплейта-->
+<script id="template" type="text/x-handlebars-template">
+    <div class="weather-block">
+        <canvas width="128" height="128" id="{{iconIndex}}"></canvas>
+        <div>
+            <span class="weather-degree_num">{{temperature.temperature}}</span>
+            <span class="weather-degree">{{temperature.degree}}</span>
+        </div>
+        <div class="weather-description">{{summary}}</div>
+    </div>
+</script>
 
 <script src="./app.js"></script>
 <script src="./skycons.js"></script>

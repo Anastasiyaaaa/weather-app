@@ -1,4 +1,4 @@
-
+;(function(window, document) {
 let weatherArr = [];
 let weatherSection = document.querySelector('.weather');
 // let coords = {};
@@ -84,34 +84,13 @@ function switchRender(day) {
 }
 
 // html структура блока
+   // todo переписать по мотивам ветки 01-10 что бы выводили когда нужно Ц или Ф градусы
 function renderWeather(e){
-    const degree =  document.querySelector('.selectric').value;
-    const weatherTemplate = document.createElement('div');
-    weatherTemplate.className = "weather-block";
-    const canvas = document.createElement('canvas');
-    canvas.setAttribute('width', '128');
-    canvas.setAttribute('height', '128');
-    canvas.id = e;
-    const degreeWrapper = document.createElement('div');
-    const weatherDegreeNum = document.createElement('span');
-    weatherDegreeNum.className = "weather-degree_num";
-    const weatherDegree = document.createElement('span');
-    weatherDegree.className = "weather-degree";
-    degreeWrapper.append(weatherDegreeNum, weatherDegree);
-    const weatherSummary = document.createElement('div');
-    weatherSummary.className = "weather-description";
-    weatherTemplate.append(canvas, degreeWrapper,weatherSummary );
-    canvas.id = e.iconIndex;
-    if (degree === "˚F, mph") {
-        weatherDegreeNum.textContent = e.temperature.temperatureF;
-    }else{
-        weatherDegreeNum.textContent = e.temperature.temperatureC;
-    }
-    weatherDegree.textContent = degree;
-    weatherSummary.textContent = e.summary;
-    weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
+    let source = document.getElementById("template").innerHTML;
+    let template = Handlebars.compile(source);
+    let updates = document.getElementById("weather");
+    updates.insertAdjacentHTML('beforeend',  template(e));
     setIcons(e.icon, e.iconIndex);
-
 }
 
 //выводим иконку через skycons
@@ -126,7 +105,15 @@ document.querySelector('.selectric').addEventListener('change', () => {
     checkDataDay(document.querySelector('.menu li.active'),
         document.querySelector('.menu li.active').dataset.day);
 });
-
+    Array.from(document.querySelectorAll('.menu li')).forEach(el => {
+        el.addEventListener('click', () => {
+            const dataActiveDay = document.querySelector('[data-day].active');
+            dataActiveDay.classList.remove('active');
+            el.classList.add('active');
+            const newData = el.dataset.day;
+            checkDataDay(el, newData);
+        })
+    });
 //клик по меню
 function checkDataDay(nav, day){
     changeActiveNav (nav);
@@ -137,3 +124,4 @@ function changeActiveNav (nav){
     document.querySelector('.menu li.active').classList.remove('active');
     nav.classList.add('active');
 }
+})(window, document);
