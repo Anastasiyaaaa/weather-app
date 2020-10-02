@@ -15,12 +15,12 @@ window.addEventListener('load', async () =>  {
     let coords;
     if ( navigator.geolocation) {
         coords = await getCoords();
-        return (coords)
     } else {
         h1.textContent = 'unlock your location';
-        return
     }
+    getWeatherAPI(coords.long, coords.lat);
 
+    console.log(coords);
 });
 
 //получаем текущие координаты
