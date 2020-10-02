@@ -31,13 +31,13 @@
     }
 
 //отправляем запрос на данные
-    async function getWeatherAPI(long, lat) {
-        const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
-        let url = `https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
-        const response = await fetch(`${proxy}${url}`);
-        const data = await response.json();
-        handleWeatherArr(data);
-    }
+async function getWeatherAPI(long, lat) {
+    const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
+    let url = `https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`;
+    const response = await fetch(`${proxy}${url}`);
+    const data = await response.json();
+    handleWeatherArr(data);
+}
 
 //обрабатываем данные под себя
     function handleWeatherArr(data) {
@@ -89,7 +89,7 @@
         let source = document.getElementById("template").innerHTML;
         let template = Handlebars.compile(source);
         let updates = document.getElementById("weather");
-        updates.innerHTML =  template(e);
+        updates.insertAdjacentHTML('beforeend',  template(e));
         setIcons(e.icon, e.iconIndex);
     }
     // let data = {
@@ -124,30 +124,40 @@
     }
 
 //клик по меню
-    function checkDataDay(nav, day) {
-        changeActiveNav(nav);
+    function checkDataDay(day) {
+        // changeActiveNav(nav);
         switch (day) {
             case 'tomorrow':
-                // weatherSection.innerHTML = "";
+                weatherSection.innerHTML = "";
                 renderWeather(weatherArr[1]);
                 break;
             case "threeDays":
-                // weatherSection.innerHTML = "";
+                weatherSection.innerHTML = "";
                 for (let i = 1; i <= 3; i++) {
                     renderWeather(weatherArr[i])
                 }
                 break;
             case 'week':
-                // weatherSection.innerHTML = "";
+                weatherSection.innerHTML = "";
                 for (let i = 1; i <= 7; i++) {
                     renderWeather(weatherArr[i])
                 }
                 break;
             default:
-                // weatherSection.innerHTML = "";
+                weatherSection.innerHTML = "";
                 renderWeather(weatherArr[0]);
         }
     }
+    //change days to show
+    Array.from(document.querySelectorAll('.menu li')).forEach(el => {
+        el.addEventListener('click', () => {
+            const dataActiveDay = document.querySelector('[data-day].active');
+            dataActiveDay.classList.remove('active');
+            el.classList.add('active');
+            const newData = el.dataset.day;
+            checkDataDay(newData);
+        })
+    });
 
 //подсветка меню
     function changeActiveNav(nav) {
