@@ -60,45 +60,17 @@ async function getWeatherAPI(long, lat) {
                 weatherArr.push(new WeatherObj(temperature, '˚F, mph', summary, icon, `icon${++index}`));
             }
         });
-        checkDataDay(document.querySelector('.menu li.active'), document.querySelector('.menu li.active').dataset.day);
+        checkDataDay(document.querySelector('.menu li.active').dataset.day);
     }
 
 // html структура блока
     function renderWeather(e) {
-        // const weatherTemplate = document.createElement('div');
-        // weatherTemplate.className = "weather-block";
-        // const canvas = document.createElement('canvas');
-        // canvas.setAttribute('width', '128');
-        // canvas.setAttribute('height', '128');
-        // // canvas.id = e;
-        // const degreeWrapper = document.createElement('div');
-        // const weatherDegreeNum = document.createElement('span');
-        // weatherDegreeNum.className = "weather-degree_num";
-        // const weatherDegree = document.createElement('span');
-        // weatherDegree.className = "weather-degree";
-        // degreeWrapper.append(weatherDegreeNum, weatherDegree);
-        // const weatherSummary = document.createElement('div');
-        // weatherSummary.className = "weather-description";
-        // weatherTemplate.append(canvas, degreeWrapper, weatherSummary);
-        // // canvas.id = e.iconIndex;
-        // weatherDegreeNum.textContent = e.temperature.temperature;
-        // weatherDegree.textContent = e.temperature.degree;
-        // weatherSummary.textContent = e.summary;
-        // weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
-
         let source = document.getElementById("template").innerHTML;
         let template = Handlebars.compile(source);
         let updates = document.getElementById("weather");
         updates.insertAdjacentHTML('beforeend',  template(e));
         setIcons(e.icon, e.iconIndex);
     }
-    // let data = {
-    //     name : 'John Doe'
-    // };
-    // let source = document.getElementById("template").innerHTML;
-    // let template = Handlebars.compile(source);
-    // let updates = document.getElementById("updates");
-    // updates.innerHTML =  template(data);
 //выводим иконку через skycons
     function setIcons(icon, iconIndex) {
         const skycons = new Skycons({"color": "pink"});
@@ -108,20 +80,9 @@ async function getWeatherAPI(long, lat) {
     }
 
 //клик по выборы температуры
-    function showDegreesVariants() {
-        const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
-        selectricItemsWrapper.style.display = 'block';
-    }
 
-//выбор градусов
-    function chooseDegrees(degree) {
-        const selectricLabel = document.querySelector('.selectric-label');
-        const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
-        selectricItemsWrapper.removeAttribute("style");
 
-        selectricLabel.textContent = degree.textContent;
-        getWeatherAPI(long, lat);
-    }
+
 
 //клик по меню
     function checkDataDay(day) {
@@ -159,9 +120,16 @@ async function getWeatherAPI(long, lat) {
         })
     });
 
-//подсветка меню
-    function changeActiveNav(nav) {
-        document.querySelector('.menu li.active').classList.remove('active');
-        nav.classList.add('active');
-    }
+    document.querySelector('.selectric-button').addEventListener('click', () => {
+        document.querySelector('.selectric-items-wrapper').style.display = 'block';
+    });
+    Array.from(document.querySelectorAll('.selectric-items li')).forEach(el => {
+        el.addEventListener('click', () => {
+            console.log(el.textContent);
+            document.querySelector('.selectric-label').textContent = el.textContent;
+            document.querySelector('.selectric-items-wrapper').removeAttribute("style");
+            getWeatherAPI(long, lat);
+        });
+    });
+
 })(window, document);
