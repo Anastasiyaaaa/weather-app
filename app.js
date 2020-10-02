@@ -80,6 +80,7 @@ function renderWeather(e){
     weatherSummary.textContent = e.summary;
     weatherSection.insertAdjacentHTML('beforeend', weatherTemplate.outerHTML);
     setIcons(e.icon, e.iconIndex);
+
 }
 //выводим иконку через skycons
 function setIcons(icon, iconIndex) {
