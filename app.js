@@ -122,6 +122,8 @@ function setIcons(icon, iconIndex) {
     return skycons.set(iconIndex, Skycons[CurrentIcon]);
 }
 
+
+//todo use select value
 //клик по выборы температуры
 function showDegreesVariants(){
     const selectricItemsWrapper = document.querySelector('.selectric-items-wrapper');
