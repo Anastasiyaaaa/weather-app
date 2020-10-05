@@ -9,9 +9,6 @@
     <title>Weather</title>
 </head>
 <body>
-
-
-
 <header class="header">
     <div class="header-content">
         <div class="main clearfix">
@@ -40,19 +37,17 @@
 
     </section>
 </main>
-<script src="./handlebars-v4.7.6.js"></script>
-<!--todo градусы и температуру для темплейта-->
 <script id="template" type="text/x-handlebars-template">
     <div class="weather-block">
         <canvas width="128" height="128" id="{{iconIndex}}"></canvas>
         <div>
-            <span class="weather-degree_num">{{temperature.temperature}}</span>
-            <span class="weather-degree">{{temperature.degree}}</span>
+            <span class="weather-degree_num">{{temperature}}</span>
+            <span class="weather-degree">{{degree}}</span>
         </div>
         <div class="weather-description">{{summary}}</div>
     </div>
 </script>
-
+<script src="./handlebars-v4.7.6.js"></script>
 <script src="./app.js"></script>
 <script src="./skycons.js"></script>
 </body>

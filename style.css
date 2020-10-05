@@ -46,6 +46,12 @@ body{
     rgba(0,212,255,0.7483368347338936) 100%);
     border: 2px solid #8c2c84;
 }
+.selectric option{
+     background: rgba(140,44,132,0.804359243697479);
+ }
+.selectric option:last-child{
+    background: rgba(0,212,255,0.7483368347338936);
+}
 .selectric-button{
     position: absolute;
     width: 18px;
