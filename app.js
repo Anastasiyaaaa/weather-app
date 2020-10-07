@@ -13,19 +13,15 @@ function TemperatureObj(temperatureF, temperatureC){
 }
 
 //начало работы
-window.addEventListener('load', async () =>  {
-    if ( navigator.geolocation) {
-        const coords = await getCoords();
-        const weatherApiData = await getWeatherApiData(coords.long, coords.lat);
-        weatherArr =  handleApiData(weatherApiData);
-        switchRender();
-    } else {
-        h1.textContent = 'unlock your location';
-    }
+window.addEventListener('load', () =>  {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+            const weatherApiData = await getWeatherApiData(pos.coords.longitude, pos.coords.latitude);
+            weatherArr = handleApiData(weatherApiData);
+            switchRender();
+    },() => h2.textContent = 'unlock your location');
 });
 document.querySelector('.selectric').addEventListener('change', () => {
     changeActiveNav (document.querySelector('.menu li.active'), (data) => switchRender(data));
-
 });
 Array.from(document.querySelectorAll('.menu li')).forEach(el => {
     el.addEventListener('click', () => {
@@ -35,18 +31,6 @@ Array.from(document.querySelectorAll('.menu li')).forEach(el => {
         changeActiveNav (el,  (data) => switchRender(data));
     })
 });
-
-//получаем текущие координаты
-function getPosition() {
-    return new Promise((res, rej) => {
-        navigator.geolocation.getCurrentPosition(res, rej);
-    });
-}
-async function getCoords() {
-    let position = await getPosition();  // wait for getPosition to complete
-    const coords = await {lat: position.coords.latitude, long: position.coords.longitude};
-   return (coords)
-}
 //отправляем запрос на данные
 async function getWeatherApiData(long, lat){
     const proxy = "https://cors-anywhere.herokuapp.com/"; // чтобы локально достучаться
